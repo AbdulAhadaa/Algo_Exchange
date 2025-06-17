@@ -59,7 +59,7 @@ const filteredData = sampleEquityData.filter((point) => {
 
    <StrategyChart
   data={filteredData}
-  title="Equity Curve – Alpha Scalper"
+  title="Your Current Strategy - Equity Curve "
 />
 
 
