@@ -37,20 +37,26 @@ useEffect(() => {
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Trade Log</h2>
 
       {/* Date Range Filter */}
-      <div className="flex flex-wrap gap-4 mb-5">
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1"
-        />
-      </div>
+  <div className="flex flex-wrap gap-4 mb-5">
+  {/* Start Date */}
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    placeholder="Start Date"
+    className="border border-gray-300 rounded px-3 py-1 text-sm w-full sm:w-auto placeholder-gray-400"
+  />
+
+  {/* End Date */}
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    placeholder="End Date"
+    className="border border-gray-300 rounded px-3 py-1 text-sm w-full sm:w-auto placeholder-gray-400"
+  />
+</div>
+
 <select
   className="border rounded px-3 py-2 text-sm mb-4"
   value={selectedBroker}
