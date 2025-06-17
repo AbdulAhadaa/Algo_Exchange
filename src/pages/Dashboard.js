@@ -57,7 +57,11 @@ const filteredData = sampleEquityData.filter((point) => {
             ))}
           </div>
 
-          <StrategyChart data={filteredData} />
+   <StrategyChart
+  data={filteredData}
+  title="Equity Curve – Alpha Scalper"
+/>
+
 
 <SummaryStatsPanel stats={dummyStats} />
    <MonthlyROIHeatmap/>

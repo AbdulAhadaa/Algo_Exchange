@@ -4,7 +4,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts"
 
-const StrategyChart = ({ data, title = "Equity Curve" }) => {
+const StrategyChart = ({ data, title  }) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 w-full">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">{title}</h2>
