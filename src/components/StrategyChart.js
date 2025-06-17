@@ -1,59 +1,25 @@
-// src/components/StrategyChart.js
 import React from "react"
-import { Bar } from "react-chartjs-2"
 import {
-  Chart as ChartJS,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Tooltip,
-  Legend,
-} from "chart.js"
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+} from "recharts"
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend)
-
-const StrategyChart = ({ data, type = "pnl" }) => {
-  const labels = data.map((s) => s.name)
-
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        label: type === "winRate" ? "Win Rate (%)" : "P/L (%)",
-        data: data.map((s) =>
-          type === "winRate"
-            ? parseFloat(s.winRate.replace("%", ""))
-            : parseFloat(s.pnl.replace("%", ""))
-        ),
-        backgroundColor: data.map((s) =>
-          s.pnl.startsWith("-") ? "#ef4444" : "#10b981"
-        ),
-      },
-    ],
-  }
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-      tooltip: { mode: "index", intersect: false },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (val) => `${val}%`,
-        },
-      },
-    },
-  }
-
+const StrategyChart = ({ data, title = "Equity Curve" }) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">
-        {type === "winRate" ? "Strategy Win Rate" : "Strategy P&L"}
-      </h2>
-      <Bar data={chartData} options={options} />
+    <div className="bg-white rounded-lg shadow-md p-4 border border-gray-200 w-full">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">{title}</h2>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+          <YAxis tick={{ fontSize: 12 }} />
+          <Tooltip
+            formatter={(value) => `$${value.toFixed ? value.toFixed(2) : value}`}
+            labelStyle={{ fontSize: 12 }}
+            contentStyle={{ fontSize: 12 }}
+          />
+          <Line type="monotone" dataKey="equity" stroke="#10b981" strokeWidth={2} dot={false} />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   )
 }

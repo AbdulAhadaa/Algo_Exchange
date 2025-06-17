@@ -1,82 +1,57 @@
-import React from "react";
-import Topbar from "../components/Topbar";
-import Sidebar from "../components/Sidebar";
-import StrategyChart from "../components/StrategyChart";
-import RecentStrategiesTable from "../components/RecentStrategiesTable";
-
-// Dummy data
-const strategiesData = [
-  {
-    name: "Alpha Scalper",
-    ticker: "AAPL",
-    type: "Equity",
-    asset: "Stocks",
-    market: "NASDAQ",
-    trades: 35,
-    winRate: "68%",
-    pnl: "+12.5%",
-    status: "Active",
-  },
-  {
-    name: "Mean Reversion X",
-    ticker: "TSLA",
-    type: "Options",
-    asset: "Stocks",
-    market: "NASDAQ",
-    trades: 50,
-    winRate: "55%",
-    pnl: "-5.2%",
-    status: "Inactive",
-  },
-  {
-    name: "Momentum Trend",
-    ticker: "BTC",
-    type: "Futures",
-    asset: "Crypto",
-    market: "Binance",
-    trades: 28,
-    winRate: "72%",
-    pnl: "+19.3%",
-    status: "Active",
-  },
-  {
-    name: "Breakout Bot",
-    ticker: "AMZN",
-    type: "Crypto",
-    asset: "Crypto",
-    market: "Coinbase",
-    trades: 18,
-    winRate: "61%",
-    pnl: "+6.8%",
-    status: "Active",
-  },
-];
+import React, { useState } from "react"
+import Sidebar from "../components/Sidebar"
+import Topbar from "../components/Topbar"
+import StrategyChart from "../components/StrategyChart"
+import RecentStrategiesTable from "../components/RecentStrategiesTable"
+import { sampleEquityData } from "../data/sampleEquityData" // we'll create this next
 
 const Dashboard = () => {
+  const [range, setRange] = useState("1Y")
+
+  // Filter equity data based on range
+  const filteredData = sampleEquityData.filter((point) => {
+    const now = new Date()
+    const pointDate = new Date(point.date)
+
+    if (range === "YTD") {
+      return pointDate.getFullYear() === now.getFullYear()
+    } else if (range === "1Y") {
+      const oneYearAgo = new Date(now.setFullYear(now.getFullYear() - 1))
+      return pointDate >= oneYearAgo
+    }
+    return true // "All"
+  })
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
-      {/* Sidebar (sticky on desktop) */}
       <Sidebar />
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-x-hidden">
-        {/* Topbar (sticky) */}
+      <div className="flex-1">
         <Topbar />
-
-        {/* Page Content */}
-        <main className="p-4 sm:p-6 md:p-8 space-y-6">
-          {/* Charts Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <StrategyChart data={strategiesData} type="pnl" />
-            <StrategyChart data={strategiesData} type="winRate" />
+        <main className="p-4 space-y-6">
+          {/* Filter Tabs */}
+          <div className="flex space-x-2 mb-4">
+            {["1Y", "YTD", "All"].map((label) => (
+              <button
+                key={label}
+                onClick={() => setRange(label)}
+                className={`px-4 py-2 rounded-md border text-sm ${
+                  range === label
+                    ? "bg-green-500 text-white"
+                    : "bg-white text-gray-700 border-gray-300"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
-          {/* Table Section */}
+          <StrategyChart data={filteredData} />
+
           <RecentStrategiesTable />
         </main>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
