@@ -6,6 +6,7 @@ import RecentStrategiesTable from "../components/RecentStrategiesTable"
 import { sampleEquityData } from "../data/sampleEquityData.js" // we'll create this next
 import SummaryStatsPanel from "../components/SummaryStatsPanel"
 import MonthlyROIHeatmap from "../components/MonthlyROIHeatmap"
+import TradeLogTable from "../components/TradeLogTable.js"
 const dummyStats = {
   profitFactor: 1.65,
   winRate: 58.3,
@@ -60,6 +61,7 @@ const filteredData = sampleEquityData.filter((point) => {
 
 <SummaryStatsPanel stats={dummyStats} />
    <MonthlyROIHeatmap/>
+   <TradeLogTable/>
           <RecentStrategiesTable />
        
         </main>
