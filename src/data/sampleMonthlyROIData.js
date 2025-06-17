@@ -1,0 +1,31 @@
+// src/data/sampleMonthlyROIData.js
+export const sampleMonthlyROIData = {
+  2024: {
+    Jan: 2.5,
+    Feb: -1.2,
+    Mar: 3.8,
+    Apr: -0.5,
+    May: 1.1,
+    Jun: 0.9,
+    Jul: -2.3,
+    Aug: 2.2,
+    Sep: -1.1,
+    Oct: 1.9,
+    Nov: 3.4,
+    Dec: 0.0,
+  },
+  2023: {
+    Jan: 1.0,
+    Feb: -0.7,
+    Mar: 2.4,
+    Apr: 1.8,
+    May: -1.6,
+    Jun: 0.5,
+    Jul: 3.0,
+    Aug: -2.1,
+    Sep: 1.5,
+    Oct: -1.3,
+    Nov: 0.4,
+    Dec: 2.0,
+  },
+}

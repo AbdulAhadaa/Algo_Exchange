@@ -3,8 +3,9 @@ import Sidebar from "../components/Sidebar"
 import Topbar from "../components/Topbar"
 import StrategyChart from "../components/StrategyChart"
 import RecentStrategiesTable from "../components/RecentStrategiesTable"
-import { sampleEquityData } from "../data/sampleEquityData" // we'll create this next
+import { sampleEquityData } from "../data/sampleEquityData.js" // we'll create this next
 import SummaryStatsPanel from "../components/SummaryStatsPanel"
+import MonthlyROIHeatmap from "../components/MonthlyROIHeatmap"
 const dummyStats = {
   profitFactor: 1.65,
   winRate: 58.3,
@@ -16,18 +17,21 @@ const Dashboard = () => {
   const [range, setRange] = useState("1Y")
 
   // Filter equity data based on range
-  const filteredData = sampleEquityData.filter((point) => {
-    const now = new Date()
-    const pointDate = new Date(point.date)
+const filteredData = sampleEquityData.filter((point) => {
+  const now = new Date()
+  const pointDate = new Date(point.date)
 
-    if (range === "YTD") {
-      return pointDate.getFullYear() === now.getFullYear()
-    } else if (range === "1Y") {
-      const oneYearAgo = new Date(now.setFullYear(now.getFullYear() - 1))
-      return pointDate >= oneYearAgo
-    }
-    return true // "All"
-  })
+  if (range === "YTD") {
+    return pointDate.getFullYear() === now.getFullYear()
+  } else if (range === "1Y") {
+    const oneYearAgo = new Date()
+    oneYearAgo.setFullYear(now.getFullYear() - 1)
+    return pointDate >= oneYearAgo
+  }
+
+  return true // "All"
+})
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
@@ -55,8 +59,9 @@ const Dashboard = () => {
           <StrategyChart data={filteredData} />
 
 <SummaryStatsPanel stats={dummyStats} />
-
+   <MonthlyROIHeatmap/>
           <RecentStrategiesTable />
+       
         </main>
       </div>
     </div>

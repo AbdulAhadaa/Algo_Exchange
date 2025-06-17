@@ -1,3 +1,4 @@
+
 export const sampleEquityData = Array.from({ length: 365 }, (_, i) => {
   const date = new Date()
   date.setDate(date.getDate() - i)
