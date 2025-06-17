@@ -37,47 +37,20 @@ useEffect(() => {
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Trade Log</h2>
 
       {/* Date Range Filter */}
- <div className="flex flex-wrap gap-4 mb-5">
-  {/* Start Date */}
-  <div className="relative w-full sm:w-auto">
-    <label
-      htmlFor="startDate"
-      className={`absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 transition-opacity ${
-        startDate ? "opacity-0" : "opacity-100"
-      }`}
-    >
-      Start Date
-    </label>
-    <input
-      id="startDate"
-      type="date"
-      value={startDate}
-      onChange={(e) => setStartDate(e.target.value)}
-      className="w-full sm:w-auto border border-gray-300 rounded px-3 py-1 text-sm"
-    />
-  </div>
-
-  {/* End Date */}
-  <div className="relative w-full sm:w-auto">
-    <label
-      htmlFor="endDate"
-      className={`absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 transition-opacity ${
-        endDate ? "opacity-0" : "opacity-100"
-      }`}
-    >
-      End Date
-    </label>
-    <input
-      id="endDate"
-      type="date"
-      value={endDate}
-      onChange={(e) => setEndDate(e.target.value)}
-      className="w-full sm:w-auto border border-gray-300 rounded px-3 py-1 text-sm"
-    />
-  </div>
-</div>
-
-
+      <div className="flex flex-wrap gap-4 mb-5">
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-1"
+        />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-1"
+        />
+      </div>
 <select
   className="border rounded px-3 py-2 text-sm mb-4"
   value={selectedBroker}

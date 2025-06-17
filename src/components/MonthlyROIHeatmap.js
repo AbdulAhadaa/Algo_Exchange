@@ -75,12 +75,13 @@ const MonthlyROIHeatmap = () => {
 
       {/* Color Legend */}
       <div className="text-xs text-gray-600 space-y-1">
-        <div><span className="inline-block w-4 h-4 mr-2 bg-green-500" /> >2% gain</div>
-        <div><span className="inline-block w-4 h-4 mr-2 bg-green-300" /> 0–2% gain</div>
-        <div><span className="inline-block w-4 h-4 mr-2 bg-red-300" /> 0–2% loss</div>
-        <div><span className="inline-block w-4 h-4 mr-2 bg-red-500" /> >2% loss</div>
-        <div><span className="inline-block w-4 h-4 mr-2 bg-gray-200" /> No data</div>
-      </div>
+  <div><span className="inline-block w-4 h-4 mr-2 bg-green-500"></span> &gt;2% gain</div>
+  <div><span className="inline-block w-4 h-4 mr-2 bg-green-300"></span> 0–2% gain</div>
+  <div><span className="inline-block w-4 h-4 mr-2 bg-red-300"></span> 0–2% loss</div>
+  <div><span className="inline-block w-4 h-4 mr-2 bg-red-500"></span> &gt;2% loss</div>
+  <div><span className="inline-block w-4 h-4 mr-2 bg-gray-200"></span> No data</div>
+</div>
+
     </div>
   )
 }
