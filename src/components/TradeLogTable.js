@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { format } from "date-fns"
 import sampleTrades from "../data/sampleTradeLog"
 
@@ -7,14 +7,20 @@ const TradeLogTable = () => {
   const [itemsPerPage] = useState(5)
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
+const [selectedBroker, setSelectedBroker] = useState("")
 
   // Date filtering
 const filteredTrades = sampleTrades.filter((trade) => {
-  const tradeDate = new Date(trade.timestamp)
-  const from = startDate ? new Date(startDate) : null
-  const to = endDate ? new Date(endDate) : null
-  return (!from || tradeDate >= from) && (!to || tradeDate <= to)
+  const tradeDate = new Date(trade.timestamp).setHours(0, 0, 0, 0)
+  const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null
+  const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null
+
+  const matchesDate = (!from || tradeDate >= from) && (!to || tradeDate <= to)
+  const matchesBroker = !selectedBroker || trade.broker === selectedBroker
+
+  return matchesDate && matchesBroker
 })
+
 
 
   // Pagination
@@ -22,13 +28,16 @@ const filteredTrades = sampleTrades.filter((trade) => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentTrades = filteredTrades.slice(indexOfFirstItem, indexOfLastItem)
   const totalPages = Math.ceil(filteredTrades.length / itemsPerPage)
+useEffect(() => {
+  setCurrentPage(1)
+}, [startDate, endDate, selectedBroker])
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200 w-full">
       <h2 className="text-lg font-semibold text-gray-800 mb-4">Trade Log</h2>
 
       {/* Date Range Filter */}
-      <div className="flex flex-wrap gap-4 mb-4">
+      <div className="flex flex-wrap gap-4 mb-5">
         <input
           type="date"
           value={startDate}
@@ -42,6 +51,28 @@ const filteredTrades = sampleTrades.filter((trade) => {
           className="border border-gray-300 rounded px-3 py-1"
         />
       </div>
+<select
+  className="border rounded px-3 py-2 text-sm mb-4"
+  value={selectedBroker}
+  onChange={(e) => setSelectedBroker(e.target.value)}
+>
+  <option value="">All Brokers</option>
+  {[...new Set(sampleTrades.map((trade) => trade.broker))].map((broker) => (
+    <option key={broker} value={broker}>
+      {broker}
+    </option>
+  ))}
+</select>
+<button
+  onClick={() => {
+    setStartDate("")
+    setEndDate("")
+    setSelectedBroker("")
+  }}
+  className="bg-gray-200 text-gray-700 mx-2 px-4 py-2 rounded text-sm hover:bg-gray-300 transition"
+>
+  Reset Filters
+</button>
 
       {/* Table */}
       <div className="overflow-x-auto">
