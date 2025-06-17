@@ -4,7 +4,7 @@ import { sampleTradeLog } from "../data/sampleTradeLog"
 const TradeLogTable = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [filter, setFilter] = useState("")
-  const itemsPerPage = 10
+  const itemsPerPage = 5
 
   const filteredTrades = sampleTradeLog.filter((trade) =>
     trade.broker.toLowerCase().includes(filter.toLowerCase())
