@@ -2,7 +2,7 @@ import React from "react";
 
 const Topbar = () => {
   return (
-    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
+    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-4 bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
       <input
         type="text"
         placeholder="Type strategy name, ticker, instrument (e.g. futures)..."

@@ -1,6 +1,12 @@
-// src/components/Sidebar.js
 import React, { useState } from "react";
-import { FaBars, FaTimes, FaChartLine, FaClipboardList, FaCogs, FaSignInAlt } from "react-icons/fa";
+import {
+  FaBars,
+  FaTimes,
+  FaChartLine,
+  FaClipboardList,
+  FaCogs,
+  FaSignInAlt,
+} from "react-icons/fa";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,8 +14,8 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile Topbar for Sidebar Toggle */}
-      <div className="md:hidden flex justify-between items-center px-4 py-3 bg-[#2d3748] text-white">
+      {/* Mobile Topbar to toggle sidebar */}
+      <div className="md:hidden flex justify-between items-center px-4 py-3 bg-[#2d3748] text-white sticky top-0 z-50">
         <div className="text-xl font-bold">
           <span className="text-green-400">ALGO</span> EXCHANGE
         </div>
@@ -19,10 +25,11 @@ const Sidebar = () => {
       </div>
 
       {/* Sidebar */}
-      <div className={`fixed z-40 top-0 left-0 h-full w-64 bg-[#2d3748] text-white flex-col transition-transform duration-300 ease-in-out
-        ${isOpen ? "flex" : "hidden"} md:flex md:sticky md:top-0 md:h-screen md:z-10`}>
-        
-        {/* Logo for desktop only */}
+      <div
+        className={`fixed md:sticky top-0 left-0 h-full md:h-screen w-64 bg-[#2d3748] text-white flex-col z-40 transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:flex`}
+      >
+        {/* Logo (desktop only) */}
         <div className="p-6 text-2xl font-bold border-b border-gray-600 hidden md:block">
           <span className="text-green-400">ALGO</span> EXCHANGE
         </div>
@@ -53,7 +60,11 @@ const Sidebar = () => {
 };
 
 const SidebarItem = ({ icon, label, small }) => (
-  <div className={`flex items-center space-x-3 px-2 py-2 rounded hover:bg-[#4a5568] cursor-pointer transition-all duration-150 ${small ? "ml-4 text-xs" : ""}`}>
+  <div
+    className={`flex items-center space-x-3 px-2 py-2 rounded hover:bg-[#4a5568] cursor-pointer transition-all duration-150 ${
+      small ? "ml-4 text-xs" : ""
+    }`}
+  >
     {icon}
     <span>{label}</span>
   </div>

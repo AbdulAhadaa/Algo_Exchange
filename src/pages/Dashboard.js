@@ -1,11 +1,10 @@
-// src/pages/Dashboard.js
-import React from "react"
-import Topbar from "../components/Topbar"
-import Sidebar from "../components/Sidebar"
-import StrategyChart from "../components/StrategyChart"
-import RecentStrategiesTable from "../components/RecentStrategiesTable"
+import React from "react";
+import Topbar from "../components/Topbar";
+import Sidebar from "../components/Sidebar";
+import StrategyChart from "../components/StrategyChart";
+import RecentStrategiesTable from "../components/RecentStrategiesTable";
 
-// Dummy data (can be moved to separate file)
+// Dummy data
 const strategiesData = [
   {
     name: "Alpha Scalper",
@@ -51,23 +50,23 @@ const strategiesData = [
     pnl: "+6.8%",
     status: "Active",
   },
-]
+];
 
 const Dashboard = () => {
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      {/* Sidebar (sticky on desktop) */}
       <Sidebar />
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Topbar */}
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-x-hidden">
+        {/* Topbar (sticky) */}
         <Topbar />
 
-        {/* Content */}
-        <main className="p-4 space-y-6">
+        {/* Page Content */}
+        <main className="p-4 sm:p-6 md:p-8 space-y-6">
           {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <StrategyChart data={strategiesData} type="pnl" />
             <StrategyChart data={strategiesData} type="winRate" />
           </div>
@@ -77,7 +76,7 @@ const Dashboard = () => {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
