@@ -4,6 +4,13 @@ import Topbar from "../components/Topbar"
 import StrategyChart from "../components/StrategyChart"
 import RecentStrategiesTable from "../components/RecentStrategiesTable"
 import { sampleEquityData } from "../data/sampleEquityData" // we'll create this next
+import SummaryStatsPanel from "../components/SummaryStatsPanel"
+const dummyStats = {
+  profitFactor: 1.65,
+  winRate: 58.3,
+  totalTrades: 276,
+  maxDrawdown: 12.7,
+}
 
 const Dashboard = () => {
   const [range, setRange] = useState("1Y")
@@ -46,6 +53,8 @@ const Dashboard = () => {
           </div>
 
           <StrategyChart data={filteredData} />
+
+<SummaryStatsPanel stats={dummyStats} />
 
           <RecentStrategiesTable />
         </main>
