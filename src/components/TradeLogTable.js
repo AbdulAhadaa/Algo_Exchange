@@ -65,14 +65,14 @@ const TradeLogTable = () => {
         <input
           type="text"
           placeholder="Search by symbol"
-          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-44"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded px-3 py-1 w-44"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
           value={brokerFilter}
           onChange={(e) => setBrokerFilter(e.target.value)}
-          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-44"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded px-3 py-1 w-44"
         >
           <option value="">Filter by Broker</option>
           {brokers.map((broker) => (
@@ -85,13 +85,13 @@ const TradeLogTable = () => {
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-40"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded px-3 py-1 w-40"
         />
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-40"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded px-3 py-1 w-40"
         />
         <button
           onClick={clearFilters}
@@ -104,7 +104,7 @@ const TradeLogTable = () => {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left">
-          <thead className="bg-gray-100 dark:bg-gray-800 text-xs uppercase">
+          <thead className="bg-gray-100 dark:bg-gray-700 text-xs uppercase">
             <tr className="text-gray-600 dark:text-gray-300">
               <th className="px-4 py-2">Symbol</th>
               <th className="px-4 py-2">Broker</th>
@@ -128,7 +128,7 @@ const TradeLogTable = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="border-b hover:bg-gray-50 dark:hover:bg-gray-800"
+                    className="border-b hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
                     <td className="px-4 py-2">{trade.symbol}</td>
                     <td className="px-4 py-2">{trade.broker}</td>
@@ -136,17 +136,27 @@ const TradeLogTable = () => {
                     <td className="px-4 py-2">{trade.quantity}</td>
                     <td className="px-4 py-2">${trade.entryPrice.toFixed(2)}</td>
                     <td className="px-4 py-2">${trade.exitPrice.toFixed(2)}</td>
-                    <td className="px-4 py-2 text-green-600 dark:text-green-400 font-semibold">
+                    <td
+                      className={`px-4 py-2 font-semibold ${
+                        trade.pnl >= 0
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-500"
+                      }`}
+                    >
                       ${trade.pnl.toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-red-500">
                       {trade.drawdown ? `${trade.drawdown}%` : "-"}
                     </td>
-                    <td className="px-4 py-2">{new Date(trade.timestamp).toLocaleString()}</td>
+                    <td className="px-4 py-2">
+                      {new Date(trade.timestamp).toLocaleString()}
+                    </td>
                     <td className="px-2">
-                      {trade.fills && trade.fills.length > 0 && (
+                      {trade.fills?.length > 0 && (
                         <button
                           onClick={() => toggleExpand(trade.id)}
+                          aria-expanded={!!expandedRows[trade.id]}
+                          aria-controls={`fills-${trade.id}`}
                           className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                         >
                           {expandedRows[trade.id] ? "Hide Fills" : "Show Fills"}
@@ -157,11 +167,12 @@ const TradeLogTable = () => {
                   {expandedRows[trade.id] && (
                     <motion.tr
                       key={`${trade.id}-fills`}
+                      id={`fills-${trade.id}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="bg-gray-50 dark:bg-gray-800"
+                      className="bg-gray-50 dark:bg-gray-700"
                     >
                       <td colSpan="10" className="px-4 py-3">
                         <div className="text-sm">
@@ -191,10 +202,11 @@ const TradeLogTable = () => {
             whileTap={{ scale: 0.95 }}
             key={i}
             onClick={() => handlePageChange(i + 1)}
-            className={`px-3 py-1 rounded border transition ${
+            disabled={currentPage === i + 1}
+            className={`px-3 py-1 rounded border transition duration-200 ${
               currentPage === i + 1
-                ? "bg-green-500 text-white"
-                : "bg-white dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600"
+                ? "bg-green-500 text-white border-green-500 cursor-not-allowed"
+                : "bg-white dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
             }`}
           >
             {i + 1}
