@@ -2,10 +2,12 @@
 import React, { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import Dashboard from "./pages/Dashboard"
+import Analytics from "./pages/Analytics"
+import Trades from "./pages/Trades"
+import Layout from "./components/Layout"
 
 const App = () => {
   useEffect(() => {
-    // Sync Tailwind dark mode class to <body>
     const root = window.document.documentElement
     const savedTheme = localStorage.getItem("theme")
 
@@ -18,7 +20,6 @@ const App = () => {
       root.classList.remove("dark")
     }
 
-    // Apply transition to body background
     document.body.classList.add("transition-colors", "duration-300", "bg-white", "dark:bg-gray-900")
   }, [])
 
@@ -27,7 +28,9 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+          <Route path="/analytics" element={<Layout><Analytics /></Layout>} />
+          <Route path="/trades" element={<Layout><Trades /></Layout>} />
         </Routes>
       </Router>
     </div>

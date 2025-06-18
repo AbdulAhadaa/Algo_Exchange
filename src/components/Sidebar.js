@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// src/components/Sidebar.js
+import React from "react"
 import {
   FaBars,
   FaTimes,
@@ -6,15 +7,15 @@ import {
   FaClipboardList,
   FaCogs,
   FaSignInAlt,
-} from "react-icons/fa";
+  FaExchangeAlt,
+  FaChartPie,
+} from "react-icons/fa"
+import { Link } from "react-router-dom"
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
+const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <>
-      {/* Mobile Topbar to toggle sidebar */}
+      {/* Mobile Topbar toggle button (inside sidebar for simplicity) */}
       <div className="md:hidden flex justify-between items-center px-4 py-3 bg-[#2d3748] text-white sticky top-0 z-50">
         <div className="text-xl font-bold">
           <span className="text-green-400">ALGO</span> EXCHANGE
@@ -24,25 +25,24 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Sidebar */}
+      {/* Sidebar panel */}
       <div
         className={`fixed md:sticky top-0 left-0 h-full md:h-screen w-64 bg-[#2d3748] text-white flex-col z-40 transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:flex`}
       >
-        {/* Logo (desktop only) */}
         <div className="p-6 text-2xl font-bold border-b border-gray-600 hidden md:block">
           <span className="text-green-400">ALGO</span> EXCHANGE
         </div>
 
-        {/* Welcome section */}
         <div className="p-4 text-sm text-gray-300">
           WELCOME BACK<br />
           <span className="font-bold">Demo</span>
         </div>
 
-        {/* Nav links */}
         <nav className="flex-1 px-4 space-y-2 text-sm overflow-y-auto pb-4">
-          <SidebarItem icon={<FaChartLine />} label="Dashboard" />
+          <Link to="/dashboard"><SidebarItem icon={<FaChartLine />} label="Dashboard" /></Link>
+          <Link to="/analytics"><SidebarItem icon={<FaChartPie />} label="Analytics" /></Link>
+          <Link to="/trades"><SidebarItem icon={<FaExchangeAlt />} label="Trades" /></Link>
           <SidebarItem icon={<FaClipboardList />} label="My Watch List" />
           <SidebarItem icon={<FaCogs />} label="System Selector" />
           <SidebarItem icon={<FaSignInAlt />} label="Open Broker Account" />
@@ -56,8 +56,8 @@ const Sidebar = () => {
         </nav>
       </div>
     </>
-  );
-};
+  )
+}
 
 const SidebarItem = ({ icon, label, small }) => (
   <div
@@ -68,6 +68,6 @@ const SidebarItem = ({ icon, label, small }) => (
     {icon}
     <span>{label}</span>
   </div>
-);
+)
 
-export default Sidebar;
+export default Sidebar
