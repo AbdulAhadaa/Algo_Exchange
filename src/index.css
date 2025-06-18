@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* index.css or global.css */
+body {
+  @apply bg-white text-gray-900;
+}
+
+html.dark body {
+  background-color: #111827 !important;
+}
+html,
+body {
+  height: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+
 /* Optional: custom font and reset */
 * {
   box-sizing: border-box;
@@ -23,4 +39,3 @@
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out forwards;
 }
-

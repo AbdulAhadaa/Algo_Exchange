@@ -35,7 +35,7 @@ const filteredData = sampleEquityData.filter((point) => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col md:flex-row">
       <Sidebar />
       <div className="flex-1">
         <Topbar />

@@ -1,154 +1,208 @@
-import React, { useEffect, useState } from "react"
-import { format } from "date-fns"
-import sampleTrades from "../data/sampleTradeLog"
+import React, { useState, useMemo } from "react";
+import { sampleTradeLog } from "../data/sampleTradeLog";
+import { motion, AnimatePresence } from "framer-motion";
 
 const TradeLogTable = () => {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage] = useState(5)
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
-const [selectedBroker, setSelectedBroker] = useState("")
+  const [trades] = useState(sampleTradeLog);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [brokerFilter, setBrokerFilter] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [expandedRows, setExpandedRows] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  // Date filtering
-const filteredTrades = sampleTrades.filter((trade) => {
-  const tradeDate = new Date(trade.timestamp).setHours(0, 0, 0, 0)
-  const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null
-  const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null
+  const filteredData = useMemo(() => {
+    return trades.filter((trade) => {
+      const tradeDate = new Date(trade.timestamp);
+      const isWithinRange =
+        (!startDate || new Date(startDate) <= tradeDate) &&
+        (!endDate || tradeDate <= new Date(endDate));
 
-  const matchesDate = (!from || tradeDate >= from) && (!to || tradeDate <= to)
-  const matchesBroker = !selectedBroker || trade.broker === selectedBroker
+      const matchesSearch =
+        !searchTerm ||
+        trade.symbol?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        trade.broker?.toLowerCase().includes(searchTerm.toLowerCase());
 
-  return matchesDate && matchesBroker
-})
+      const matchesBroker =
+        !brokerFilter ||
+        (trade.broker || "").toLowerCase() === brokerFilter.toLowerCase();
 
+      return isWithinRange && matchesSearch && matchesBroker;
+    });
+  }, [trades, searchTerm, startDate, endDate, brokerFilter]);
 
+  const brokers = [...new Set(sampleTradeLog.map((trade) => trade.broker))];
 
-  // Pagination
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentTrades = filteredTrades.slice(indexOfFirstItem, indexOfLastItem)
-  const totalPages = Math.ceil(filteredTrades.length / itemsPerPage)
-useEffect(() => {
-  setCurrentPage(1)
-}, [startDate, endDate, selectedBroker])
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const toggleExpand = (id) => {
+    setExpandedRows((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setBrokerFilter("");
+    setStartDate("");
+    setEndDate("");
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200 w-full">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">Trade Log</h2>
+    <div className="bg-white dark:bg-gray-900 dark:text-white rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
+      <h2 className="text-xl font-semibold mb-4">Trade Log</h2>
 
-      {/* Date Range Filter */}
+      {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-5">
+        <input
+          type="text"
+          placeholder="Search by symbol"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-44"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          value={brokerFilter}
+          onChange={(e) => setBrokerFilter(e.target.value)}
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-44"
+        >
+          <option value="">Filter by Broker</option>
+          {brokers.map((broker) => (
+            <option key={broker} value={broker}>
+              {broker}
+            </option>
+          ))}
+        </select>
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-40"
         />
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white rounded px-3 py-1 w-40"
         />
+        <button
+          onClick={clearFilters}
+          className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-sm px-4 py-1 rounded border border-gray-300 dark:border-gray-600"
+        >
+          Clear Filters
+        </button>
       </div>
-<select
-  className="border rounded px-3 py-2 text-sm mb-4"
-  value={selectedBroker}
-  onChange={(e) => setSelectedBroker(e.target.value)}
->
-  <option value="">All Brokers</option>
-  {[...new Set(sampleTrades.map((trade) => trade.broker))].map((broker) => (
-    <option key={broker} value={broker}>
-      {broker}
-    </option>
-  ))}
-</select>
-<button
-  onClick={() => {
-    setStartDate("")
-    setEndDate("")
-    setSelectedBroker("")
-  }}
-  className="bg-gray-200 text-gray-700 mx-2 px-4 py-2 rounded text-sm hover:bg-gray-300 transition"
->
-  Reset Filters
-</button>
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="hidden md:table w-full text-sm text-left text-gray-700">
-          <thead className="text-xs uppercase bg-gray-100">
-            <tr>
+        <table className="min-w-full text-sm text-left">
+          <thead className="bg-gray-100 dark:bg-gray-800 text-xs uppercase">
+            <tr className="text-gray-600 dark:text-gray-300">
+              <th className="px-4 py-2">Symbol</th>
               <th className="px-4 py-2">Broker</th>
-              <th className="px-4 py-2">Date</th>
               <th className="px-4 py-2">Side</th>
               <th className="px-4 py-2">Qty</th>
               <th className="px-4 py-2">Entry</th>
               <th className="px-4 py-2">Exit</th>
               <th className="px-4 py-2">PnL</th>
               <th className="px-4 py-2">Drawdown</th>
+              <th className="px-4 py-2">Timestamp</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            {currentTrades.map((trade, i) => (
-              <tr key={i} className="border-b">
-                <td className="px-4 py-2">{trade.broker}</td>
-                <td className="px-4 py-2">{format(new Date(trade.timestamp), "MM-dd-yyyy")}</td>
-                
-                <td className="px-4 py-2">{trade.side}</td>
-                <td className="px-4 py-2">{trade.quantity}</td>
-                <td className="px-4 py-2">${trade.entryPrice}</td>
-                <td className="px-4 py-2">${trade.exitPrice}</td>
-                <td className="px-4 py-2 text-green-600">${trade.pnl}</td>
-                <td className="px-4 py-2 text-red-500">{trade.drawdown}%</td>
-              </tr>
-            ))}
+            <AnimatePresence>
+              {paginatedData.map((trade) => (
+                <React.Fragment key={trade.id}>
+                  <motion.tr
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="border-b hover:bg-gray-50 dark:hover:bg-gray-800"
+                  >
+                    <td className="px-4 py-2">{trade.symbol}</td>
+                    <td className="px-4 py-2">{trade.broker}</td>
+                    <td className="px-4 py-2">{trade.side}</td>
+                    <td className="px-4 py-2">{trade.quantity}</td>
+                    <td className="px-4 py-2">${trade.entryPrice.toFixed(2)}</td>
+                    <td className="px-4 py-2">${trade.exitPrice.toFixed(2)}</td>
+                    <td className="px-4 py-2 text-green-600 dark:text-green-400 font-semibold">
+                      ${trade.pnl.toFixed(2)}
+                    </td>
+                    <td className="px-4 py-2 text-red-500">
+                      {trade.drawdown ? `${trade.drawdown}%` : "-"}
+                    </td>
+                    <td className="px-4 py-2">{new Date(trade.timestamp).toLocaleString()}</td>
+                    <td className="px-2">
+                      {trade.fills && trade.fills.length > 0 && (
+                        <button
+                          onClick={() => toggleExpand(trade.id)}
+                          className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          {expandedRows[trade.id] ? "Hide Fills" : "Show Fills"}
+                        </button>
+                      )}
+                    </td>
+                  </motion.tr>
+                  {expandedRows[trade.id] && (
+                    <motion.tr
+                      key={`${trade.id}-fills`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="bg-gray-50 dark:bg-gray-800"
+                    >
+                      <td colSpan="10" className="px-4 py-3">
+                        <div className="text-sm">
+                          <strong>Fills:</strong>
+                          <ul className="list-disc ml-5 mt-1">
+                            {trade.fills.map((fill, index) => (
+                              <li key={index}>
+                                {fill.qty} @ ${fill.price} on {fill.time}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
-
-        {/* Mobile layout */}
-        <div className="md:hidden space-y-4">
-          {currentTrades.map((trade, i) => (
-            <div key={i} className="border border-gray-200 rounded p-3 shadow-sm">
-              <div className="font-semibold">{trade.broker}</div>
-              <div className="text-sm text-gray-600">{format(new Date(trade.timestamp), "PPpp")}</div>
-              <div className="mt-2">
-                <p><strong>Side:</strong> {trade.side}</p>
-                <p><strong>Qty:</strong> {trade.quantity}</p>
-                <p><strong>Entry:</strong> ${trade.entryPrice}</p>
-                <p><strong>Exit:</strong> ${trade.exitPrice}</p>
-                <p><strong>PnL:</strong> <span className="text-green-600">${trade.pnl}</span></p>
-                <p><strong>Drawdown:</strong> <span className="text-red-500">{trade.drawdown}%</span></p>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4 text-sm">
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <div className="space-x-2">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+      <div className="flex justify-center mt-6 space-x-2">
+        {Array.from({ length: totalPages }, (_, i) => (
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            key={i}
+            onClick={() => handlePageChange(i + 1)}
+            className={`px-3 py-1 rounded border transition ${
+              currentPage === i + 1
+                ? "bg-green-500 text-white"
+                : "bg-white dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600"
+            }`}
           >
-            Prev
-          </button>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="px-3 py-1 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+            {i + 1}
+          </motion.button>
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TradeLogTable
+export default TradeLogTable;

@@ -74,8 +74,8 @@ const RecentStrategiesTable = () => {
   })
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 transition-colors duration-300">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
         Recent Strategies
       </h2>
 
@@ -87,43 +87,27 @@ const RecentStrategiesTable = () => {
           placeholder="Search strategy or ticker"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full sm:w-1/4 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full sm:w-1/4 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
         />
 
         {/* Dropdowns */}
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-          {/* Type */}
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            {["All", "Equity", "Options", "Futures", "Crypto"].map((opt) => (
-              <option key={opt}>{opt}</option>
-            ))}
-          </select>
-
-          {/* Asset */}
-          <select
-            value={asset}
-            onChange={(e) => setAsset(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            {["All", "Stocks", "Crypto"].map((opt) => (
-              <option key={opt}>{opt}</option>
-            ))}
-          </select>
-
-          {/* Market */}
-          <select
-            value={market}
-            onChange={(e) => setMarket(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            {["All", "NASDAQ", "Binance", "Coinbase"].map((opt) => (
-              <option key={opt}>{opt}</option>
-            ))}
-          </select>
+          {[
+            ["type", type, setType, ["All", "Equity", "Options", "Futures", "Crypto"]],
+            ["asset", asset, setAsset, ["All", "Stocks", "Crypto"]],
+            ["market", market, setMarket, ["All", "NASDAQ", "Binance", "Coinbase"]],
+          ].map(([key, value, setter, options]) => (
+            <select
+              key={key}
+              value={value}
+              onChange={(e) => setter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+            >
+              {options.map((opt) => (
+                <option key={opt}>{opt}</option>
+              ))}
+            </select>
+          ))}
         </div>
 
         {/* Status Tabs + Clear Button */}
@@ -132,10 +116,10 @@ const RecentStrategiesTable = () => {
             <button
               key={s}
               onClick={() => setStatus(s)}
-              className={`px-3 py-1 rounded-full text-sm font-medium border ${
+              className={`px-3 py-1 rounded-full text-sm font-medium border transition ${
                 status === s
-                  ? "bg-green-100 text-green-700 border-green-500"
-                  : "bg-white text-gray-600 border-gray-300"
+                  ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-green-500"
+                  : "bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600"
               }`}
             >
               {s}
@@ -151,7 +135,7 @@ const RecentStrategiesTable = () => {
                 setMarket("All")
                 setStatus("All")
               }}
-              className="ml-2 px-3 py-1 rounded-full text-sm border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
+              className="ml-2 px-3 py-1 rounded-full text-sm border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
             >
               Clear Filters
             </button>
@@ -161,18 +145,12 @@ const RecentStrategiesTable = () => {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-left text-gray-700">
-          <thead className="bg-gray-100 text-gray-500 uppercase text-xs whitespace-nowrap">
+        <table className="min-w-full text-sm text-left text-gray-700 dark:text-gray-200 transition">
+          <thead className="bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 uppercase text-xs whitespace-nowrap">
             <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Ticker</th>
-              <th className="px-4 py-2">Type</th>
-              <th className="px-4 py-2">Asset</th>
-              <th className="px-4 py-2">Market</th>
-              <th className="px-4 py-2">Trades</th>
-              <th className="px-4 py-2">Win %</th>
-              <th className="px-4 py-2">P/L</th>
-              <th className="px-4 py-2">Status</th>
+              {["Name", "Ticker", "Type", "Asset", "Market", "Trades", "Win %", "P/L", "Status"].map((h) => (
+                <th key={h} className="px-4 py-2">{h}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -180,10 +158,10 @@ const RecentStrategiesTable = () => {
               <tr
                 key={index}
                 className={`${
-                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                } border-b whitespace-nowrap`}
+                  index % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-700"
+                } border-b border-gray-200 dark:border-gray-600 whitespace-nowrap transition`}
               >
-                <td className="px-4 py-2 font-medium text-gray-900">{s.name}</td>
+                <td className="px-4 py-2 font-medium text-gray-900 dark:text-gray-100">{s.name}</td>
                 <td className="px-4 py-2">{s.ticker}</td>
                 <td className="px-4 py-2">{s.type}</td>
                 <td className="px-4 py-2">{s.asset}</td>
@@ -201,8 +179,8 @@ const RecentStrategiesTable = () => {
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-semibold ${
                       s.status === "Active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-600"
+                        ? "bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300"
+                        : "bg-red-100 dark:bg-red-800 text-red-600 dark:text-red-300"
                     }`}
                   >
                     {s.status}
@@ -213,7 +191,7 @@ const RecentStrategiesTable = () => {
 
             {filteredStrategies.length === 0 && (
               <tr>
-                <td colSpan="9" className="text-center px-4 py-6 text-gray-500">
+                <td colSpan="9" className="text-center px-4 py-6 text-gray-500 dark:text-gray-400">
                   No matching strategies found.
                 </td>
               </tr>
