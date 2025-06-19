@@ -37,9 +37,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     <>
       {/* Mobile Topbar */}
       <div className="md:hidden flex justify-between items-center px-4 py-3 bg-[#2d3748] text-white sticky top-0 z-50">
-        <div className="text-xl font-bold">
+      <Link to="/analytics">
+        <div className="text-xl font-bold " >
           <span className="text-green-400">ALGO</span> EXCHANGE
         </div>
+        </Link>
         <button onClick={toggleSidebar}>
           {isOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
         </button>

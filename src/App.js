@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard"
 import Analytics from "./pages/Analytics"
 import Trades from "./pages/Trades"
 import Layout from "./components/Layout"
-
+import { Toaster } from "react-hot-toast"
 const App = () => {
   useEffect(() => {
     const root = window.document.documentElement
@@ -25,6 +25,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+     <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

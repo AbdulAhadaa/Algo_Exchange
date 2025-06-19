@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react"
-import Sidebar from "../components/Sidebar"
-import Topbar from "../components/Topbar"
+
 import StrategyChart from "../components/StrategyChart"
 import { sampleStrategies } from "../data/analyticsData"
 
