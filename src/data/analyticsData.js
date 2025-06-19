@@ -1,4 +1,6 @@
-export const generateSampleEquityData = (length = 90) => {
+// src/data/sampleEquityData.js
+
+export const generateSampleEquity = (length = 90) => {
   const data = []
   const today = new Date()
   let equity = 10000
@@ -17,4 +19,13 @@ export const generateSampleEquityData = (length = 90) => {
   }
 
   return data
+}
+
+export const sampleStrategies = {
+  "Momentum Strategy": generateSampleEquity(380),
+  "Mean Reversion Strategy": generateSampleEquity(380),
+  "Breakout Strategy": generateSampleEquity(380),
+  "Swing Strategy": generateSampleEquity(380),
+  "Scalping Strategy": generateSampleEquity(380)
+  
 }
